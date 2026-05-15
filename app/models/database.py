@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -19,11 +19,14 @@ class Usuario(Base):
     username = Column(String, unique=True, index=True)
     password_hash = Column(String)
 
-class Livro(Base):
-    __tablename__ = "livros"
+class Objetivo(Base):
+    __tablename__ = "objetivos"
     id = Column(Integer, primary_key=True, index=True)
     titulo = Column(String)
-    autor = Column(String)
+    descricao = Column(String)
+    prazo_dias = Column(Integer)
+    data_inicio = Column(Date)
+    data_fim = Column(Date) 
 
 def init_db():
     Base.metadata.create_all(bind=engine)
