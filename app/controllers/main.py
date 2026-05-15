@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.models.database import SessionLocal, Livro, Usuario
+from app.models.database import SessionLocal, Objetivo, Usuario
 from app.controllers.auth import criar_token, verificar_senha, hash_senha
 
 router = APIRouter()
@@ -25,14 +25,14 @@ def login(dados: dict, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Credenciais inválidas")
     return {"token": criar_token({"sub": user.username})}
 
-# CRUD LIVROS
-@router.get("/livros")
-def listar_livros(db: Session = Depends(get_db)):
-    return db.query(Livro).all()
+# CRUD OBJETIVOS
+@router.get("/objetivos")
+def listar_objetivos(db: Session = Depends(get_db)):
+    return db.query(Objetivo).all()
 
-@router.post("/livros")
-def criar_livro(livro: dict, db: Session = Depends(get_db)):
-    novo = Livro(titulo=livro['titulo'], autor=livro['autor'])
+@router.post("/objetivos")
+def criar_objetivo(objetivo: dict, db: Session = Depends(get_db)):
+    novo = Objetivo(titulo=objetivo['titulo'], descricao=objetivo['descricao'], )
     db.add(novo)
     db.commit()
     return {"status": "criado"}
