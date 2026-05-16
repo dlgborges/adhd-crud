@@ -4,7 +4,7 @@ import os
 
 API_URL = "https://app-crud-gtob.onrender.com"
 
-st.set_page_config(page_title="Biblioteca Digital", layout="wide")
+st.set_page_config(page_title="Acompanhamento de Objetivos", layout="wide")
 
 if "token" not in st.session_state:
     st.session_state.token = None
@@ -28,27 +28,31 @@ with st.sidebar:
             st.rerun()
 
 # --- INTERFACE CRUD ---
-st.title("Gestão de Acervo")
+st.title("Acompanhamento de Objetivos")
 
 if st.session_state.token:
     # FORMULÁRIO DE CRIAÇÃO
     with st.expander("Novo Registro"):
-        c1, c2 = st.columns(2)
-        tit = c1.text_input("Título do Livro")
-        aut = c2.text_input("Autor")
-        if st.button("Salvar Livro"):
-            requests.post(f"{API_URL}/livros", json={"titulo": tit, "autor": aut})
-            st.toast("Livro adicionado!")
+        c1, c2, c3, c4, c5 = st.columns(5)
+        tit = c1.text_input("Objetivo")
+        desc = c2.text_input("Descrição")
+        data_inicio = c3.date_input('Data de início')
+        prazo = c4.number_input('Prazo em dias')
+        data_fim = c5.date_input('Data de fim') # this must be a read-only date field calculated by adding the prazo to data_inicio
+
+        if st.button("Salvar Objetivo"):
+            requests.post(f"{API_URL}/objetivos", json={"titulo": tit, "descricao": desc, 'data de inicio': data_inicio, 'prazo': prazo, 'data de termino': data_fim})
+            st.toast("Objetivo adicionado!")
             st.rerun()
 
     # LISTAGEM E AÇÕES
-    livros = requests.get(f"{API_URL}/livros").json()
-    for l in livros:
+    objetivos = requests.get(f"{API_URL}/objetivos").json()
+    for l in objetivos:
         with st.container(border=True):
             col_info, col_del = st.columns([4, 1])
-            col_info.write(f"**{l['titulo']}** | {l['autor']}")
+            col_info.write(f"**{l['titulo']}** | {l['descricao']}")
             if col_del.button("Excluir", key=f"del_{l['id']}"):
-                requests.delete(f"{API_URL}/livros/{l['id']}")
+                requests.delete(f"{API_URL}/objetivos/{l['id']}")
                 st.rerun()
 else:
-    st.info("Acesse com seu usuário para gerenciar os livros.")
+    st.info("Acesse com seu usuário para gerenciar os objetivos.")

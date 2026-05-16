@@ -37,19 +37,19 @@ def criar_objetivo(objetivo: dict, db: Session = Depends(get_db)):
     db.commit()
     return {"status": "criado"}
 
-@router.put("/livros/{id}")
-def editar_livro(id: int, dados: dict, db: Session = Depends(get_db)):
-    livro = db.query(Livro).filter(Livro.id == id).first()
-    if not livro: raise HTTPException(status_code=404)
-    livro.titulo = dados['titulo']
-    livro.autor = dados['autor']
+@router.put("/objetivos/{id}")
+def editar_objetivo(id: int, dados: dict, db: Session = Depends(get_db)):
+    objetivo = db.query(Objetivo).filter(Objetivo.id == id).first()
+    if not objetivo: raise HTTPException(status_code=404)
+    objetivo.titulo = dados['titulo']
+    objetivo.descricao = dados['descricao']
     db.commit()
     return {"status": "atualizado"}
 
-@router.delete("/livros/{id}")
-def excluir_livro(id: int, db: Session = Depends(get_db)):
-    livro = db.query(Livro).filter(Livro.id == id).first()
-    if not livro: raise HTTPException(status_code=404)
-    db.delete(livro)
+@router.delete("/objetivos/{id}")
+def excluir_objetivo(id: int, db: Session = Depends(get_db)):
+    objetivo = db.query(Objetivo).filter(Objetivo.id == id).first()
+    if not objetivo: raise HTTPException(status_code=404)
+    db.delete(objetivo)
     db.commit()
     return {"status": "removido"}
