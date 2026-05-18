@@ -32,7 +32,7 @@ def listar_objetivos(db: Session = Depends(get_db)):
 
 @router.post("/objetivos")
 def criar_objetivo(objetivo: dict, db: Session = Depends(get_db)):
-    novo = Objetivo(titulo=objetivo['titulo'], descricao=objetivo['descricao'], )
+    novo = Objetivo(titulo=objetivo['titulo'], descricao=objetivo['descricao'], prazo_dias=objetivo.get('prazo_dias'), data_inicio=objetivo.get('data_inicio'), data_fim=objetivo.get('data_fim'))
     db.add(novo)
     db.commit()
     return {"status": "criado"}
@@ -43,6 +43,9 @@ def editar_objetivo(id: int, dados: dict, db: Session = Depends(get_db)):
     if not objetivo: raise HTTPException(status_code=404)
     objetivo.titulo = dados['titulo']
     objetivo.descricao = dados['descricao']
+    objetivo.prazo_dias = dados.get('prazo_dias', objetivo.prazo_dias)
+    objetivo.data_inicio = dados.get('data_inicio', objetivo.data_inicio)
+    objetivo.data_fim = dados.get('data_fim', objetivo.data_fim)
     db.commit()
     return {"status": "atualizado"}
 
