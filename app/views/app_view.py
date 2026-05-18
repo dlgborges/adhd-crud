@@ -44,7 +44,7 @@ if st.session_state.token:
         data_fim = c5.date_input('Data de fim') # this must be a read-only date field calculated by adding the prazo to data_inicio
 
         if st.button("Salvar Objetivo"):
-                        requests.post(f"{API_URL}/objetivos", json={
+            requests.post(f"{API_URL}/objetivos", json={
                 "titulo": tit,
                 "descricao": desc,
                 'data de inicio': data_inicio.isoformat() if data_inicio else None,
