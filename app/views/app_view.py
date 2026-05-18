@@ -59,7 +59,14 @@ if st.session_state.token:
     for l in objetivos:
         with st.container(border=True):
             col_info, col_del = st.columns([4, 1])
-            col_info.write(f"**{l['titulo']}** | {l['descricao']}")
+            col_info.write(f"**{l['titulo']}**")
+            col_info.write(f"{l['descricao']}")
+            if l.get('data de inicio'):
+                col_info.write(f"Data de início: {l['data de inicio']}")
+            if l.get('prazo'):
+                col_info.write(f"Prazo em dias: {l['prazo']}")
+            if l.get('data de termino'):
+                col_info.write(f"Data de término: {l['data de termino']}")
             if col_del.button("Excluir", key=f"del_{l['id']}"):
                 requests.delete(f"{API_URL}/objetivos/{l['id']}")
                 st.rerun()
