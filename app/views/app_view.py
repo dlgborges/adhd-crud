@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import os
 
-API_URL = "https://app.onrender.com/"
+API_URL = os.environ.get("API_URL", "http://localhost:8000")
 
 st.set_page_config(page_title="Acompanhamento de Objetivos", layout="wide")
 
@@ -15,8 +15,11 @@ with st.sidebar:
         st.header("Login")
         u = st.text_input("Usuário")
         p = st.text_input("Senha", type="password")
+        print(f"DEBUG - Token atual: {st.session_state.token}")
         if st.button("Entrar"):
             res = requests.post(f"{API_URL}/auth/login", json={"username": u, "password": p})
+            print(f"DEBUG - Status code: {res.status_code}")
+            print(f"DEBUG - Response: {res.text}")
             if res.status_code == 200:
                 st.session_state.token = res.json()["token"]
                 st.rerun()
