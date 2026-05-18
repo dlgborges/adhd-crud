@@ -4,7 +4,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # No Render, configure a variável de ambiente DATABASE_URL
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:pass@ep-shiny-pond.neon.tech/neondb")
+print("DATABASE_URL", os.getenv("DATABASE_URL"))
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://user:pass@ep-shiny-pond.neon.tech/neondb")
 
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
