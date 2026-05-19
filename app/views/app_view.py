@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import os
+from datetime import timedelta
 
 API_URL = os.environ.get("API_URL", "http://localhost:8000")
 
@@ -40,8 +41,9 @@ if st.session_state.token:
         tit = c1.text_input("Objetivo")
         desc = c2.text_input("Descrição")
         data_inicio = c3.date_input('Data de início')
-        prazo = c4.number_input('Prazo em dias')
-        data_fim = c5.date_input('Data de fim') # this must be a read-only date field calculated by adding the prazo to data_inicio
+        prazo = c4.number_input('Prazo em dias', min_value=0, value=0, step=1)
+        data_fim_calculada = (data_inicio + timedelta(days=prazo)) if data_inicio else None
+        data_fim = c5.date_input('Data de fim', value=data_fim_calculada, disabled=True)
 
         if st.button("Salvar Objetivo"):
             requests.post(f"{API_URL}/objetivos", json={
