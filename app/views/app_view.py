@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 import os
-from datetime import timedelta
+from datetime import timedelta, date
 
 API_URL = os.environ.get("API_URL", "http://localhost:8000")
 
@@ -72,5 +72,30 @@ if st.session_state.token:
             if col_del.button("Excluir", key=f"del_{l['id']}"):
                 requests.delete(f"{API_URL}/objetivos/{l['id']}")
                 st.rerun()
+
+            with st.expander("Editar Objetivo"):
+                ec1, ec2, ec3, ec4, ec5 = st.columns(5)
+                edit_tit = ec1.text_input("Objetivo", value=l['titulo'], key=f"edit_tit_{l['id']}")
+                edit_desc = ec2.text_input("Descrição", value=l['descricao'], key=f"edit_desc_{l['id']}")
+                
+                init_val_data = date.fromisoformat(l['data_inicio']) if l.get('data_inicio') else date.today()
+                init_val_prazo = int(l['prazo_dias']) if l.get('prazo_dias') else 0
+                
+                edit_data_inicio = ec3.date_input('Data de início', value=init_val_data, key=f"edit_start_{l['id']}")
+                edit_prazo = ec4.number_input('Prazo em dias', min_value=0, value=init_val_prazo, step=1, key=f"edit_prazo_{l['id']}")
+                
+                edit_data_fim_calculada = (edit_data_inicio + timedelta(days=edit_prazo)) if edit_data_inicio else None
+                ec5.date_input('Data de fim', value=edit_data_fim_calculada, disabled=True, key=f"edit_fim_{l['id']}")
+                
+                if st.button("Salvar Alterações", key=f"save_{l['id']}"):
+                    requests.put(f"{API_URL}/objetivos/{l['id']}", json={
+                        "titulo": edit_tit,
+                        "descricao": edit_desc,
+                        "data_inicio": edit_data_inicio.isoformat() if edit_data_inicio else None,
+                        "prazo_dias": edit_prazo,
+                        "data_fim": edit_data_fim_calculada.isoformat() if edit_data_fim_calculada else None
+                    })
+                    st.toast("Objetivo atualizado!")
+                    st.rerun()
 else:
     st.info("Acesse com seu usuário para gerenciar os objetivos.")
