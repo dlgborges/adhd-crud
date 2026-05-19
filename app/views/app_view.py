@@ -47,9 +47,9 @@ if st.session_state.token:
             requests.post(f"{API_URL}/objetivos", json={
                 "titulo": tit,
                 "descricao": desc,
-                'data de inicio': data_inicio.isoformat() if data_inicio else None,
-                'prazo': prazo,
-                'data de termino': data_fim.isoformat() if data_fim else None
+                'data_inicio': data_inicio.isoformat() if data_inicio else None,
+                'prazo_dias': prazo,
+                'data_fim': data_fim.isoformat() if data_fim else None
             })
             st.toast("Objetivo adicionado!")
             st.rerun()
@@ -61,12 +61,12 @@ if st.session_state.token:
             col_info, col_del = st.columns([4, 1])
             col_info.write(f"**{l['titulo']}**")
             col_info.write(f"{l['descricao']}")
-            if l.get('data de inicio'):
-                col_info.write(f"Data de início: {l['data de inicio']}")
-            if l.get('prazo'):
-                col_info.write(f"Prazo em dias: {l['prazo']}")
-            if l.get('data de termino'):
-                col_info.write(f"Data de término: {l['data de termino']}")
+            if l.get('data_inicio'):
+                col_info.write(f"Data de início: {l['data_inicio']}")
+            if l.get('prazo_dias'):
+                col_info.write(f"Prazo em dias: {l['prazo_dias']}")
+            if l.get('data_fim'):
+                col_info.write(f"Data de término: {l['data_fim']}")
             if col_del.button("Excluir", key=f"del_{l['id']}"):
                 requests.delete(f"{API_URL}/objetivos/{l['id']}")
                 st.rerun()
